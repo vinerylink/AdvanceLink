@@ -35,6 +35,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 
 
 public class QuickReturnBaseActivity extends Activity {
+    private static final String TAG = QuickReturnBaseActivity.class.getSimpleName();
 
     // region Constants
 
@@ -116,7 +117,7 @@ public class QuickReturnBaseActivity extends Activity {
 
             switch (resultCode){
                 case RESULT_OK:
-                    Log.d(getClass().getSimpleName(), "onActivityResult() : RESULT_OK");
+                    Log.d(TAG, "onActivityResult() : RESULT_OK");
 
                     responseCode = data.getIntExtra(RESPONSE_CODE, -5);
 
@@ -164,28 +165,28 @@ public class QuickReturnBaseActivity extends Activity {
                             // consumption of the purchase here)
                             break;
                         case BILLING_RESPONSE_RESULT_USER_CANCELED:
-                            Log.d(getClass().getSimpleName(), "donate() : User pressed back or canceled a dialog");
+                            Log.d(TAG, "donate() : User pressed back or canceled a dialog");
                             break;
                         case BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE:
-                            Log.d(getClass().getSimpleName(), "donate() : Billing API version is not supported for the type requested");
+                            Log.d(TAG, "donate() : Billing API version is not supported for the type requested");
                             break;
                         case BILLING_RESPONSE_RESULT_ITEM_UNAVAILABLE:
-                            Log.d(getClass().getSimpleName(), "donate() : Requested product is not available for purchase");
+                            Log.d(TAG, "donate() : Requested product is not available for purchase");
                             break;
                         case BILLING_RESPONSE_RESULT_DEVELOPER_ERROR:
-                            Log.d(getClass().getSimpleName(), "donate() : Invalid arguments provided to the API. This error can also " +
+                            Log.d(TAG, "donate() : Invalid arguments provided to the API. This error can also " +
                                     "indicate that the application was not correctly signed or properly set up for In-app Billing in " +
                                     "Google Play, or does not have the necessary permissions in its manifest");
                             break;
                         case BILLING_RESPONSE_RESULT_ERROR:
-                            Log.d(getClass().getSimpleName(), "donate() : Fatal error during the API action");
+                            Log.d(TAG, "donate() : Fatal error during the API action");
                             break;
                         case BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED:
-                            Log.d(getClass().getSimpleName(), "donate() : Failure to purchase since item is already owned");
+                            Log.d(TAG, "donate() : Failure to purchase since item is already owned");
                             showCrouton(android.R.color.holo_red_light, R.string.item_already_owned);
                             break;
                         case BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED:
-                            Log.d(getClass().getSimpleName(), "donate() : Failure to consume since item is not owned");
+                            Log.d(TAG, "donate() : Failure to consume since item is not owned");
                             break;
                         default:
                             break;
@@ -194,7 +195,7 @@ public class QuickReturnBaseActivity extends Activity {
 
                     break;
                 case RESULT_CANCELED:
-                    Log.d(getClass().getSimpleName(), "onActivityResult() : RESULT_CANCELED");
+                    Log.d(TAG, "onActivityResult() : RESULT_CANCELED");
 
                     responseCode = data.getIntExtra(RESPONSE_CODE, -5);
 
@@ -289,28 +290,28 @@ public class QuickReturnBaseActivity extends Activity {
                             Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
                     break;
                 case BILLING_RESPONSE_RESULT_USER_CANCELED:
-                    Log.d(getClass().getSimpleName(), "donate() : User pressed back or canceled a dialog");
+                    Log.d(TAG, "donate() : User pressed back or canceled a dialog");
                     break;
                 case BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE:
-                    Log.d(getClass().getSimpleName(), "donate() : Billing API version is not supported for the type requested");
+                    Log.d(TAG, "donate() : Billing API version is not supported for the type requested");
                     break;
                 case BILLING_RESPONSE_RESULT_ITEM_UNAVAILABLE:
-                    Log.d(getClass().getSimpleName(), "donate() : Requested product is not available for purchase");
+                    Log.d(TAG, "donate() : Requested product is not available for purchase");
                     break;
                 case BILLING_RESPONSE_RESULT_DEVELOPER_ERROR:
-                    Log.d(getClass().getSimpleName(), "donate() : Invalid arguments provided to the API. This error can also " +
+                    Log.d(TAG, "donate() : Invalid arguments provided to the API. This error can also " +
                             "indicate that the application was not correctly signed or properly set up for In-app Billing in " +
                             "Google Play, or does not have the necessary permissions in its manifest");
                     break;
                 case BILLING_RESPONSE_RESULT_ERROR:
-                    Log.d(getClass().getSimpleName(), "donate() : Fatal error during the API action");
+                    Log.d(TAG, "donate() : Fatal error during the API action");
                     break;
                 case BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED:
-                    Log.d(getClass().getSimpleName(), "donate() : Failure to purchase since item is already owned");
+                    Log.d(TAG, "donate() : Failure to purchase since item is already owned");
                     showCrouton(android.R.color.holo_red_light, R.string.item_already_owned);
                     break;
                 case BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED:
-                    Log.d(getClass().getSimpleName(), "donate() : Failure to consume since item is not owned");
+                    Log.d(TAG, "donate() : Failure to consume since item is not owned");
                     break;
                 default:
                     break;
@@ -329,7 +330,7 @@ public class QuickReturnBaseActivity extends Activity {
         String token = "inapp:com.vinerylink.al:android.test.purchased";
         try {
             int response = mService.consumePurchase(3, getPackageName(), token);
-            Log.d(getClass().getSimpleName(), "consumePurchase() : response - "+response);
+            Log.d(TAG, "consumePurchase() : response - "+response);
 
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -362,13 +363,13 @@ public class QuickReturnBaseActivity extends Activity {
                         String price = object.getString("price");
 
                         if (sku.equals(getString(R.string.buy_one_beer))) {
-                            Log.d(getClass().getSimpleName(), "price - "+price);
+                            Log.d(TAG, "price - "+price);
 //                            mPremiumUpgradePrice = price;
                         } else if (sku.equals(getString(R.string.buy_two_beers))) {
-                            Log.d(getClass().getSimpleName(), "price - "+price);
+                            Log.d(TAG, "price - "+price);
 //                            mGasPrice = price;
                         } else if (sku.equals(getString(R.string.buy_four_beers))) {
-                            Log.d(getClass().getSimpleName(), "price - "+price);
+                            Log.d(TAG, "price - "+price);
 //                            mGasPrice = price;
                         }
                     } catch (JSONException e) {
@@ -390,7 +391,7 @@ public class QuickReturnBaseActivity extends Activity {
                 mySkus = purchases.getStringArrayList(RESPONSE_INAPP_ITEM_LIST);
                 myPurchases = purchases.getStringArrayList(RESPONSE_INAPP_PURCHASE_DATA_LIST);
                 mySignatures = purchases.getStringArrayList(RESPONSE_INAPP_PURCHASE_SIGNATURE_LIST);
-                Log.d(getClass().getSimpleName(), "getAllPurchases() : purchases");
+                Log.d(TAG, "getAllPurchases() : purchases");
 
                 // handle items here
             }
