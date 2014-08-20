@@ -34,6 +34,8 @@ import org.lucasr.twowayview.widget.SpannableGridLayoutManager;
 import org.lucasr.twowayview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -107,19 +109,45 @@ abstract class AbstractGooglePlusFragment<T> extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+//        AnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(getAdapter());
+//        animAdapter.setAbsListView(getListView());
+
+//        mListView.setAdapter(animAdapter);
+//        mListView.setAdapter(adapter);
+
+//        mListView.addFooterView(new View(getActivity()), null, false);
+//        mListView.addHeaderView(new View(getActivity()), null, false);
+
+//        int headerHeight = getResources().getDimensionPixelSize(R.dimen.header_height3);
+//        int headerTranslation = -(headerHeight*2) + QuickReturnUtils.getActionBarHeight(getActivity());
+//        int footerTranslation = -(headerHeight*2) + QuickReturnUtils.getActionBarHeight(getActivity());
+
+//        mListView.setOnScrollListener(new QuickReturnListViewOnScrollListener(QuickReturnType.BOTH,
+//                mQuickReturnHeaderTextView, headerTranslation, mQuickReturnFooterLinearLayout, -footerTranslation));
+
+        ArrayList<View> headerViews = new ArrayList<View>();
+        headerViews.add(getActionBarView());
+
+        ArrayList<View> footerViews = new ArrayList<View>();
+        footerViews.add(mQuickReturnFooterTextView);
+        footerViews.add(mQuickReturnFooterImageView);
+
+        final SpeedyQuickReturnListViewOnScrollListener scrollListener = new SpeedyQuickReturnListViewOnScrollListener(getActivity(), QuickReturnType.CUSTOM, headerViews, footerViews);
+        scrollListener.setSlideHeaderUpAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_header_up));
+        scrollListener.setSlideHeaderDownAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_header_down));
+        scrollListener.setSlideFooterUpAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_footer_up));
+        scrollListener.setSlideFooterDownAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_footer_down));
+
+//        mListView.setOnScrollListener(scrollListener);
+
         final Activity activity = getActivity();
 
         mToast = Toast.makeText(activity, "", Toast.LENGTH_SHORT);
         mToast.setGravity(Gravity.CENTER, 0, 0);
 
-//        mRecyclerView = (TwoWayView) view.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLongClickable(true);
 
-//        mPositionText = (TextView) view.getRootView().findViewById(R.id.position);
-//        mCountText = (TextView) view.getRootView().findViewById(R.id.count);
-
-//        mStateText = (TextView) view.getRootView().findViewById(R.id.state);
         updateState(SCROLL_STATE_IDLE);
 
         ClickItemTouchListener clickListener = ClickItemTouchListener.addTo(mRecyclerView);
@@ -151,6 +179,9 @@ abstract class AbstractGooglePlusFragment<T> extends Fragment {
             public void onScrolled(int i, int i2) {
 //                mPositionText.setText("First: " + mRecyclerView.getFirstVisiblePosition());
 //                mCountText.setText("Count: " + mRecyclerView.getChildCount());
+                int first = mRecyclerView.getFirstVisiblePosition();
+                int count = mRecyclerView.getChildCount();
+                scrollListener.onScroll(getScrollY(mRecyclerView), first, count);
             }
         });
 
@@ -158,38 +189,28 @@ abstract class AbstractGooglePlusFragment<T> extends Fragment {
         mRecyclerView.addItemDecoration(new DividerItemDecoration(divider));
 
         mRecyclerView.setAdapter(getAdapter(activity, mRecyclerView, mLayoutId));
+    }
 
-//        AnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(getAdapter());
-//        animAdapter.setAbsListView(getListView());
+    private static Dictionary<Integer, Integer> sListViewItemHeights = new Hashtable<Integer, Integer>();
+    public static int getScrollY(TwoWayView lv) {
+        View c = lv.getChildAt(0);
+        if (c == null) {
+            return 0;
+        }
 
-//        mListView.setAdapter(animAdapter);
-//        mListView.setAdapter(adapter);
+        int firstVisiblePosition = lv.getFirstVisiblePosition();
+        int scrollY = -(c.getTop());
 
-//        mListView.addFooterView(new View(getActivity()), null, false);
-//        mListView.addHeaderView(new View(getActivity()), null, false);
+        sListViewItemHeights.put(lv.getFirstVisiblePosition(), c.getHeight());
 
-//        int headerHeight = getResources().getDimensionPixelSize(R.dimen.header_height3);
-//        int headerTranslation = -(headerHeight*2) + QuickReturnUtils.getActionBarHeight(getActivity());
-//        int footerTranslation = -(headerHeight*2) + QuickReturnUtils.getActionBarHeight(getActivity());
+        Log.d("QuickReturnUtils", "getScrollY() : -(c.getTop()) - " + -(c.getTop()));
 
-//        mListView.setOnScrollListener(new QuickReturnListViewOnScrollListener(QuickReturnType.BOTH,
-//                mQuickReturnHeaderTextView, headerTranslation, mQuickReturnFooterLinearLayout, -footerTranslation));
+        for (int i = 0; i < firstVisiblePosition; ++i) {
+            if (sListViewItemHeights.get(i) != null) // (this is a sanity check)
+                scrollY += sListViewItemHeights.get(i); //add all heights of the views that are gone
+        }
 
-        ArrayList<View> headerViews = new ArrayList<View>();
-        headerViews.add(getActionBarView());
-
-        ArrayList<View> footerViews = new ArrayList<View>();
-        footerViews.add(mQuickReturnFooterTextView);
-        footerViews.add(mQuickReturnFooterImageView);
-
-        SpeedyQuickReturnListViewOnScrollListener scrollListener = new SpeedyQuickReturnListViewOnScrollListener(getActivity(), QuickReturnType.CUSTOM, headerViews, footerViews);
-        scrollListener.setSlideHeaderUpAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_header_up));
-        scrollListener.setSlideHeaderDownAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_header_down));
-        scrollListener.setSlideFooterUpAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_footer_up));
-        scrollListener.setSlideFooterDownAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_footer_down));
-
-//        mListView.setOnScrollListener(scrollListener);
-
+        return scrollY;
     }
 
     @Override
