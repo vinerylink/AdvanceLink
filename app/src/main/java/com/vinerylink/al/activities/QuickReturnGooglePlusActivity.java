@@ -24,8 +24,8 @@ public class QuickReturnGooglePlusActivity extends QuickReturnBaseActivity {
         ButterKnife.inject(this);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, QuickReturnGooglePlusFragment.newInstance())
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, QuickReturnGooglePlusFragment.newInstance(R.layout.fragment_quick_return_google_plus))
                     .commit();
         }
 
