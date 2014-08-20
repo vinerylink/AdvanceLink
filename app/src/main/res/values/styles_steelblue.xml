@@ -19,7 +19,7 @@
 
 <resources>
 
-    <style name="Theme.Steelblue" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="Theme.Steelblue" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_steelblue</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Steelblue</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Steelblue</item>

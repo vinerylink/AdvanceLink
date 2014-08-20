@@ -1,7 +1,5 @@
 package com.vinerylink.al.activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -34,7 +34,7 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 
-public class QuickReturnBaseActivity extends Activity {
+public class QuickReturnBaseActivity extends ActionBarActivity {
 
     // region Constants
 
@@ -94,7 +94,7 @@ public class QuickReturnBaseActivity extends Activity {
     }
 
     protected void setDisplayHomeAsUpEnabled(boolean enabled) {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(enabled);
     }
 
