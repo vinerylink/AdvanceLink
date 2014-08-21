@@ -51,12 +51,6 @@ public class QuickReturnRecyclerViewFragment extends AbstractGooglePlusFragment<
     private String[] mValues;
     private Toast mToast;
 
-    protected RecyclerView.Adapter getAdapter(Context context, TwoWayView view, int layoutId) {
-
-        mValues = getResources().getStringArray(R.array.countries);
-        return new SimpleAdapter(context, view, layoutId, mValues);
-    }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -266,7 +260,7 @@ public class QuickReturnRecyclerViewFragment extends AbstractGooglePlusFragment<
     }
 
     private void updateAdapter() {
-        mContentView.setAdapter(getAdapter(getActivity(), mContentView, getView().getId()));
+        mContentView.setAdapter(new SimpleAdapter(getActivity(), mContentView, getView().getId(), mValues));
         setEmptyViewShow(mValues.length <= 0);
     }
 }
