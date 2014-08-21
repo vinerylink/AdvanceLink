@@ -1,6 +1,5 @@
 package com.vinerylink.al.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,12 +9,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vinerylink.al.R;
-import com.vinerylink.al.enums.QuickReturnType;
 import com.vinerylink.al.listeners.SpeedyQuickReturnListViewOnScrollListener;
 import com.vinerylink.al.utils.QuickReturnUtils;
 
@@ -24,7 +21,6 @@ import org.lucasr.twowayview.TwoWayLayoutManager;
 import org.lucasr.twowayview.TwoWayView;
 import org.lucasr.twowayview.widget.DividerItemDecoration;
 
-import java.util.ArrayList;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
@@ -58,57 +54,31 @@ public class QuickReturnRecyclerViewFragment extends AbstractGooglePlusFragment<
     protected RecyclerView.Adapter getAdapter(Context context, TwoWayView view, int layoutId) {
 
         mValues = getResources().getStringArray(R.array.countries);
-
-        return new SimpleAdapter(context, view, layoutId);
+        return new SimpleAdapter(context, view, layoutId, mValues);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        AnimationAdapter animAdapter = new SwingBottomInAnimationAdapter(getAdapter());
-//        animAdapter.setAbsListView(getListView());
+        setEmptyText(R.string.whats_happening);
 
-//        mListView.setAdapter(animAdapter);
-//        mListView.setAdapter(adapter);
-
-//        mListView.addFooterView(new View(getActivity()), null, false);
-//        mListView.addHeaderView(new View(getActivity()), null, false);
-
-//        int headerHeight = getResources().getDimensionPixelSize(R.dimen.header_height3);
-//        int headerTranslation = -(headerHeight*2) + QuickReturnUtils.getActionBarHeight(getActivity());
-//        int footerTranslation = -(headerHeight*2) + QuickReturnUtils.getActionBarHeight(getActivity());
-
-//        mListView.setOnScrollListener(new QuickReturnListViewOnScrollListener(QuickReturnType.BOTH,
-//                mQuickReturnHeaderTextView, headerTranslation, mQuickReturnFooterLinearLayout, -footerTranslation));
-
-        ArrayList<View> headerViews = new ArrayList<View>();
-        headerViews.add(getActionBarView());
-
-        ArrayList<View> footerViews = new ArrayList<View>();
-        footerViews.add(mQuickReturnFooterTextView);
-        footerViews.add(mQuickReturnFooterImageView);
-
-        final SpeedyQuickReturnListViewOnScrollListener scrollListener = new SpeedyQuickReturnListViewOnScrollListener(getActivity(), QuickReturnType.CUSTOM, headerViews, footerViews);
-        scrollListener.setSlideHeaderUpAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_header_up));
-        scrollListener.setSlideHeaderDownAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_header_down));
-        scrollListener.setSlideFooterUpAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_footer_up));
-        scrollListener.setSlideFooterDownAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_footer_down));
-
-//        mListView.setOnScrollListener(scrollListener);
-
-        final Activity activity = getActivity();
-
-        mToast = Toast.makeText(activity, "", Toast.LENGTH_SHORT);
+        mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
         mToast.setGravity(Gravity.CENTER, 0, 0);
+
+        updateState(SCROLL_STATE_IDLE);
+
+        if (null == mContentView) {
+            return;
+        }
+
+        SAMPLE_VALUES = getResources().getStringArray(R.array.countries);
+        reloadAdapterData();
 
         mContentView.setHasFixedSize(true);
         mContentView.setLongClickable(true);
 
-        updateState(SCROLL_STATE_IDLE);
-
         ClickItemTouchListener clickListener = ClickItemTouchListener.addTo(mContentView);
-
         clickListener.setOnItemClickListener(new ClickItemTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerView parent, View child, int position, long id) {
@@ -116,7 +86,6 @@ public class QuickReturnRecyclerViewFragment extends AbstractGooglePlusFragment<
                 mToast.show();
             }
         });
-
         clickListener.setOnItemLongClickListener(new ClickItemTouchListener.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(RecyclerView parent, View child, int position, long id) {
@@ -126,6 +95,7 @@ public class QuickReturnRecyclerViewFragment extends AbstractGooglePlusFragment<
             }
         });
 
+        final SpeedyQuickReturnListViewOnScrollListener scrollListener = getScrollListener();
         mContentView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(int scrollState) {
@@ -144,8 +114,6 @@ public class QuickReturnRecyclerViewFragment extends AbstractGooglePlusFragment<
 
         final Drawable divider = getResources().getDrawable(android.R.drawable.divider_horizontal_dark);
         mContentView.addItemDecoration(new DividerItemDecoration(divider));
-
-        mContentView.setAdapter(getAdapter(activity, mContentView, getView().getId()));
     }
 
     private void updateState(int scrollState) {
@@ -173,6 +141,7 @@ public class QuickReturnRecyclerViewFragment extends AbstractGooglePlusFragment<
         private final Context mContext;
         private final TwoWayView mContentView;
 //        private final int mLayoutId;
+        private String[] mLabels;
 
         public static class SimpleViewHolder extends RecyclerView.ViewHolder {
             public final TextView title;
@@ -183,10 +152,11 @@ public class QuickReturnRecyclerViewFragment extends AbstractGooglePlusFragment<
             }
         }
 
-        public SimpleAdapter(Context context, TwoWayView recyclerView, int layoutId) {
+        public SimpleAdapter(Context context, TwoWayView recyclerView, int layoutId, String[] values) {
             mContext = context;
             mContentView = recyclerView;
 //            mLayoutId = layoutId;
+            mLabels = values;
         }
 
         @Override
@@ -197,7 +167,7 @@ public class QuickReturnRecyclerViewFragment extends AbstractGooglePlusFragment<
 
         @Override
         public void onBindViewHolder(SimpleViewHolder holder, int position) {
-            holder.title.setText(String.valueOf(position));
+            holder.title.setText(mLabels[position % mLabels.length]);
 
             boolean isVertical = (mContentView.getOrientation() == TwoWayLayoutManager.Orientation.VERTICAL);
             final View itemView = holder.itemView;
@@ -264,8 +234,39 @@ public class QuickReturnRecyclerViewFragment extends AbstractGooglePlusFragment<
 
         @Override
         public int getItemCount() {
-            return 100;
+            return null == mLabels ? 0 : mLabels.length;
         }
     }
 
+
+    private final static String[] EMPTY_VALUES = new String[0];
+    private static String[] SAMPLE_VALUES;
+    private void resetAdapterData() {
+        if (EMPTY_VALUES != mValues) {
+            mValues = EMPTY_VALUES;
+            updateAdapter();
+        }
+    }
+
+    private void reloadAdapterData() {
+        if (SAMPLE_VALUES != mValues) {
+            mValues = SAMPLE_VALUES;
+            updateAdapter();
+        }
+    }
+
+    @Override
+    public void onRefreshButtonClicked(View v) {
+        resetAdapterData();
+    }
+
+    @Override
+    public void onAddButtonClicked(View v) {
+        reloadAdapterData();
+    }
+
+    private void updateAdapter() {
+        mContentView.setAdapter(getAdapter(getActivity(), mContentView, getView().getId()));
+        setEmptyViewShow(mValues.length <= 0);
+    }
 }
