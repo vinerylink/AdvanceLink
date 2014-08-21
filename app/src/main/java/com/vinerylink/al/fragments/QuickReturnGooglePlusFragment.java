@@ -25,7 +25,6 @@ public class QuickReturnGooglePlusFragment extends AbstractGooglePlusFragment<Li
     private final static String[] EMPTY_VALUES = new String[0];
     private static String[] SAMPLE_VALUES;
     private String[] mValues;
-    private AnimationAdapter mAdapter;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -73,9 +72,9 @@ public class QuickReturnGooglePlusFragment extends AbstractGooglePlusFragment<Li
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.google_plus_list_item, R.id.item_tv, mValues);
 
-        mAdapter = new SwingBottomInAnimationAdapter(adapter);
-        mAdapter.setAbsListView(mContentView);
-        mContentView.setAdapter(mAdapter);
+        AnimationAdapter aniAdapter = new SwingBottomInAnimationAdapter(adapter);
+        aniAdapter.setAbsListView(mContentView);
+        mContentView.setAdapter(aniAdapter);
         setEmptyViewShow(mValues.length <= 0);
     }
 }
