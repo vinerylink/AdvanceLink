@@ -1,13 +1,13 @@
 package com.vinerylink.al.fragments;
 
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +25,7 @@ import butterknife.OnClick;
 /**
  * Created by etiennelawlor on 6/23/14.
  */
-abstract class AbstractGooglePlusFragment<V extends ViewGroup> extends ListFragment {
+abstract class AbstractGooglePlusFragment<V extends ViewGroup> extends Fragment {
     private static final String TAG = AbstractGooglePlusFragment.class.getSimpleName();
 
     @InjectView(android.R.id.list)
@@ -34,6 +34,8 @@ abstract class AbstractGooglePlusFragment<V extends ViewGroup> extends ListFragm
     ImageView mQuickReturnFooterImageView;
     @InjectView(R.id.quick_return_footer_tv)
     TextView mQuickReturnFooterTextView;
+    @InjectView(R.id.tv_empty_view)
+    TextView mEmptyTextView;
     // endregion
 
     //region Listeners
@@ -98,4 +100,27 @@ abstract class AbstractGooglePlusFragment<V extends ViewGroup> extends ListFragm
         return scrollListener;
     }
     // helper method end
+
+    protected void setEmptyText(int textId) {
+        mEmptyTextView.setText(textId);
+    }
+
+    private void performShowAnimation(View view) {
+        view.setVisibility(View.VISIBLE);
+        view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_footer_up));
+    }
+    private void performHideAnimation(View view) {
+        view.setVisibility(View.GONE);
+        view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_header_up));
+    }
+
+    protected void setEmptyViewShow(boolean show) {
+        if (show) {
+            performHideAnimation(mContentView);
+            performShowAnimation(mEmptyTextView);
+        } else {
+            performShowAnimation(mContentView);
+            performHideAnimation(mEmptyTextView);
+        }
+    }
 }
