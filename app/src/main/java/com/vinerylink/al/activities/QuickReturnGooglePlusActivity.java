@@ -3,7 +3,7 @@ package com.vinerylink.al.activities;
 import android.os.Bundle;
 
 import com.vinerylink.al.R;
-import com.vinerylink.al.fragments.QuickReturnGooglePlusFragment;
+import com.vinerylink.al.fragments.QuickReturnRecyclerViewFragment;
 
 import butterknife.ButterKnife;
 
@@ -25,7 +25,7 @@ public class QuickReturnGooglePlusActivity extends QuickReturnBaseActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, QuickReturnGooglePlusFragment.newInstance(R.layout.fragment_quick_return_google_plus))
+                    .add(R.id.container, QuickReturnRecyclerViewFragment.newInstance(R.layout.fragment_quick_return_two_way_view))
                     .commit();
         }
 

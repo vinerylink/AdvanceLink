@@ -3,28 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<ListView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
-        <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
-        <!--android:divider="@android:color/transparent"-->
-        <!--android:dividerHeight="@dimen/activity_horizontal_margin"-->
-        <!--android:id="@android:id/list"-->
-        <!--android:scrollbars="none"/>-->
+    <TextView
+        style="@android:style/TextAppearance.Large"
+        android:id="@+id/tv_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@android:color/white"
+        android:text="@string/whats_happening"
+        android:visibility="gone"
+        />
 
-    <org.lucasr.twowayview.TwoWayView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@android:id/list"
-        android:scrollbars="none"
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:divider="@android:color/transparent"
-        style="@style/TwoWayView"
-        app:layoutManager="ListLayoutManager"/>
+        android:dividerHeight="@dimen/activity_horizontal_margin"
+        android:id="@android:id/list"
+        android:scrollbars="none"/>
 
     <com.vinerylink.al.views.CustomFontTextView
         android:id="@+id/quick_return_footer_tv"
@@ -57,6 +55,5 @@
         android:padding="18dp"
         android:layout_alignParentRight="true"
         />
-
 </RelativeLayout>
 

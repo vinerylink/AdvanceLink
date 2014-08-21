@@ -1,40 +1,79 @@
 package com.vinerylink.al.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.vinerylink.al.R;
 
-import org.lucasr.twowayview.TwoWayView;
-
-public class QuickReturnGooglePlusFragment extends AbstractGooglePlusFragment<String> {
+public class QuickReturnGooglePlusFragment extends AbstractGooglePlusFragment<ListView> {
     // region Constructors
-//    public static QuickReturnGooglePlusFragment newInstance() {
-//        QuickReturnGooglePlusFragment fragment = new QuickReturnGooglePlusFragment();
-//        Bundle args = new Bundle();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
-    public static QuickReturnGooglePlusFragment newInstance(int layoutId) {
+    public static QuickReturnGooglePlusFragment newInstance() {
         QuickReturnGooglePlusFragment fragment = new QuickReturnGooglePlusFragment();
-
         Bundle args = new Bundle();
-        args.putInt(ARG_LAYOUT_ID, layoutId);
         fragment.setArguments(args);
-
         return fragment;
     }
 
     // region Member Variables
+    private final static String[] EMPTY_VALUES = new String[0];
+    private static String[] SAMPLE_VALUES;
     private String[] mValues;
+    private AnimationAdapter mAdapter;
 
-    protected RecyclerView.Adapter getAdapter(Context context, TwoWayView view, int layoutId) {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        mValues = getResources().getStringArray(R.array.countries);
+        if (null == mContentView) {
+            return;
+        }
 
-        return new SimpleAdapter(context, view, layoutId);
+        SAMPLE_VALUES = getResources().getStringArray(R.array.countries);
+        reloadAdapterData();
+
+        mContentView.addFooterView(new View(getActivity()), null, false);
+        mContentView.addHeaderView(new View(getActivity()), null, false);
+        mContentView.setOnScrollListener(getScrollListener());
+
+        setEmptyText(R.string.whats_happening);
+    }
+
+    private void resetAdapterData() {
+        if (EMPTY_VALUES != mValues) {
+            mValues = EMPTY_VALUES;
+            updateAdapter();
+        }
+    }
+
+    private void reloadAdapterData() {
+        if (SAMPLE_VALUES != mValues) {
+            mValues = SAMPLE_VALUES;
+            updateAdapter();
+        }
+    }
+
+    @Override
+    public void onRefreshButtonClicked(View v) {
+        resetAdapterData();
+    }
+
+    @Override
+    public void onAddButtonClicked(View v) {
+        reloadAdapterData();
+    }
+
+    private void updateAdapter() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.google_plus_list_item, R.id.item_tv, mValues);
+
+        mAdapter = new SwingBottomInAnimationAdapter(adapter);
+        mAdapter.setAbsListView(mContentView);
+        mContentView.setAdapter(mAdapter);
+        setEmptyViewShow(mValues.length <= 0);
     }
 }
