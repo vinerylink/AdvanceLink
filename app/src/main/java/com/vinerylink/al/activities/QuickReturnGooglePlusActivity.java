@@ -25,7 +25,7 @@ public class QuickReturnGooglePlusActivity extends QuickReturnBaseActivity {
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, QuickReturnGooglePlusFragment.newInstance())
+                    .add(R.id.container, QuickReturnGooglePlusFragment.newInstance(R.layout.fragment_quick_return_google_plus))
                     .commit();
         }
 

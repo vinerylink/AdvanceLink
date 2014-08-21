@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import org.lucasr.twowayview.TwoWayView;
+
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -94,4 +96,26 @@ public class QuickReturnUtils {
         sActionBarHeight = TypedValue.complexToDimensionPixelSize(sTypedValue.data, context.getResources().getDisplayMetrics());
         return sActionBarHeight;
     }
+
+    public static int getScrollY(TwoWayView lv) {
+        View c = lv.getChildAt(0);
+        if (c == null) {
+            return 0;
+        }
+
+        int firstVisiblePosition = lv.getFirstVisiblePosition();
+        int scrollY = -(c.getTop());
+
+        sListViewItemHeights.put(lv.getFirstVisiblePosition(), c.getHeight());
+
+        Log.d("QuickReturnUtils", "getScrollY() : -(c.getTop()) - " + -(c.getTop()));
+
+        for (int i = 0; i < firstVisiblePosition; ++i) {
+            if (sListViewItemHeights.get(i) != null) // (this is a sanity check)
+                scrollY += sListViewItemHeights.get(i); //add all heights of the views that are gone
+        }
+
+        return scrollY;
+    }
+
 }
