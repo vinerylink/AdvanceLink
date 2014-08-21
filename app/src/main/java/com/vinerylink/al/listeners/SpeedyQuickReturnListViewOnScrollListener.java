@@ -70,6 +70,10 @@ public class SpeedyQuickReturnListViewOnScrollListener implements AbsListView.On
     private int mPrevCount = 0;
     @Override
     public void onScroll(AbsListView listview, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        onScroll(QuickReturnUtils.getScrollY(listview), firstVisibleItem, visibleItemCount);
+    }
+
+    public void onScroll(int scrollY, int firstVisibleItem, int visibleItemCount) {
         if (mPrevFirst == firstVisibleItem && mPrevCount == visibleItemCount) {
             return;
         }
@@ -78,7 +82,6 @@ public class SpeedyQuickReturnListViewOnScrollListener implements AbsListView.On
             return;
         }
 
-        int scrollY = QuickReturnUtils.getScrollY(listview);
         int diff = mPrevScrollY - scrollY;
         mPrevFirst = firstVisibleItem;
         mPrevCount = visibleItemCount;
