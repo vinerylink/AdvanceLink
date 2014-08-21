@@ -1,7 +1,7 @@
 package com.vinerylink.al.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +26,9 @@ import butterknife.OnClick;
  */
 abstract class AbstractGooglePlusFragment<V extends ViewGroup> extends Fragment {
     private static final String TAG = AbstractGooglePlusFragment.class.getSimpleName();
+
+    protected static final String ARG_LAYOUT_ID = "layout_id";
+    private int mLayoutId;
 
     @InjectView(android.R.id.list)
     V mContentView;
@@ -57,11 +60,12 @@ abstract class AbstractGooglePlusFragment<V extends ViewGroup> extends Fragment 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mLayoutId = getArguments().getInt(ARG_LAYOUT_ID);
     }
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_quick_return_google_plus, container, false);
+        View view = inflater.inflate(mLayoutId, container, false);
         ButterKnife.inject(this, view);
         return view;
     }

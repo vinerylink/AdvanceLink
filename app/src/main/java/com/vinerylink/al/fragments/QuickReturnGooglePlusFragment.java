@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
@@ -12,10 +11,13 @@ import com.vinerylink.al.R;
 
 public class QuickReturnGooglePlusFragment extends AbstractGooglePlusFragment<ListView> {
     // region Constructors
-    public static QuickReturnGooglePlusFragment newInstance() {
+    public static QuickReturnGooglePlusFragment newInstance(int layoutId) {
         QuickReturnGooglePlusFragment fragment = new QuickReturnGooglePlusFragment();
+
         Bundle args = new Bundle();
+        args.putInt(ARG_LAYOUT_ID, layoutId);
         fragment.setArguments(args);
+
         return fragment;
     }
 
